@@ -1,0 +1,63 @@
+---
+title: "Analýza hlavných komponentov (PCA)"
+subtitle: "Softvér na analýzu údajov — Projektová dokumentácia"
+author: "Artem Vara"
+date: "2026-04-15"
+format:
+  html:
+    theme: cosmo
+    self-contained: true
+    toc: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+Tento projekt sa zaoberá metódou **Analýzy hlavných komponentov (PCA)** — technikou z lineárnej algebry na redukciu dimenzionality dát. Metóda je aplikovaná na dataset `mtcars` (32 automobilov, 11 premenných).
+
+---
+
+## Dokumenty projektu
+
+### Technická správa
+
+Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matematickými vzťahmi, kód použitý vo výpočte, výsledky s komentárom a záver.
+
+[Otvoriť technickú správu](pca_projekt.html)
+
+---
+
+### Prezentácia
+
+Revealjs prezentácia (10 slajdov) pokrývajúca matematické základy PCA, ručný príklad výpočtu, aplikácie metódy v praxi a vizualizáciu výsledkov.
+
+[Otvoriť prezentáciu](pca_prezentacia.html)
+
+---
+
+### Interaktívny dashboard
+
+Jednostránkový dashboard s interaktívnymi grafmi: scree plot, biplót, záťaže premenných a prehľad datasetu.
+
+[Otvoriť dashboard](pca_dashboard.html)
+
+---
+
+## Zdrojové súbory
+
+Všetky zdrojové súbory projektu (`.qmd`) sú súčasťou odovzdaného archívu.
+
+| Súbor | Popis |
+|---|---|
+| `pca_projekt.qmd` | Zdrojový kód technickej správy |
+| `pca_prezentacia.qmd` | Zdrojový kód prezentácie |
+| `pca_dashboard.qmd` | Zdrojový kód dashboardu |
+| `references.bib` | Bibliografické záznamy |
+| `styles.css` | Štýly prezentácie |
+
+---
+
+## Použité nástroje
+
+R, Quarto, ggplot2, ggfortify, plotly, knitr, kableExtra.

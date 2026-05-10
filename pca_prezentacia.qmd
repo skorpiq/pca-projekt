@@ -1,0 +1,237 @@
+---
+title: "Analýza hlavných komponentov (PCA)"
+subtitle: "Softvér na analýzu údajov — Projektová správa"
+author: "Artem Vara"
+date: "2026-04-29"
+format:
+  revealjs:
+    theme: simple
+    transition: slide
+    slide-number: true
+    footer: "Softvér na analýzu údajov · PCA · 2026"
+    highlight-style: github
+    width: 1280
+    height: 720
+    margin: 0.04
+    fontsize: 27px
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+library(ggplot2)
+library(ggfortify)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+
+pca <- prcomp(mtcars, center = TRUE, scale. = TRUE)
+lambda <- pca$sdev^2
+pve <- lambda / sum(lambda) * 100
+```
+
+## Problém vysokej dimenzionality
+
+:::: {.columns}
+
+::: {.column width="52%"}
+**Situácia:**
+
+- Dataset `mtcars`: **11 premenných**, 32 áut
+- Priama vizualizácia 11D priestoru je nemožná
+- Ako nájsť skrytú štruktúru?
+
+**Riešenie — PCA:**
+
+Transformuj $p$ premenných na $k \ll p$ komponentov, ktoré zachovávajú čo najviac informácie.
+:::
+
+::: {.column width="48%"}
+```{r}
+#| echo: false
+#| fig-height: 3.8
+#| fig-width: 5.5
+pairs(mtcars[, 1:5],
+      col = "#2166ac", pch = 19, cex = 0.6,
+      main = "Párové grafy (5 z 11 premenných)",
+      cex.main = 0.9)
+```
+:::
+
+::::
+
+## Matematické základy
+
+**Algoritmus PCA — 4 kroky:**
+
+::: {.incremental}
+1. **Štandardizácia**: $z_{ij} = \dfrac{x_{ij} - \bar{x}_j}{s_j}$
+
+2. **Kovariančná matica**: $\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
+
+3. **Spektrálny rozklad**: $\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i$
+
+4. **Projekcia**: $\mathbf{PC}_k = \mathbf{Z}\mathbf{v}_k$
+:::
+
+. . .
+
+**Vysvetlená variabilita** $k$-teho komponentu:
+$$\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%$$
+
+## Dataset mtcars
+
+```{r}
+#| echo: false
+kable(head(mtcars, 6), digits = 1) |>
+  kable_styling(font_size = 16, full_width = TRUE,
+                bootstrap_options = c("striped", "hover"))
+```
+
+::: {style="font-size: 0.85em; margin-top: 0.5em;"}
+**32** modelov automobilov (1974) · **11** technických premenných · Zdroj: Henderson & Velleman (1981)
+:::
+
+## Výpočet PCA v R
+
+```{r}
+#| output-location: column
+
+pca <- prcomp(mtcars,
+              center = TRUE,
+              scale. = TRUE)
+
+lambda <- pca$sdev^2
+pve    <- lambda / sum(lambda) * 100
+
+data.frame(
+  PC         = paste0("PC", 1:5),
+  Eigenvalue = round(lambda[1:5], 2),
+  PVE        = round(pve[1:5], 2),
+  Cumulative = round(cumsum(pve)[1:5], 2)
+)
+```
+
+## Scree Plot
+
+```{r}
+#| echo: false
+#| fig-height: 4.5
+#| fig-width: 10
+
+df <- data.frame(
+  PC    = factor(paste0("PC", 1:11), levels = paste0("PC", 1:11)),
+  PVE   = pve,
+  Cumul = cumsum(pve)
+)
+
+ggplot(df, aes(x = PC)) +
+  geom_col(aes(y = PVE), fill = "#2166ac", alpha = 0.8, width = 0.6) +
+  geom_line(aes(y = Cumul, group = 1), color = "#d73027", linewidth = 1.4) +
+  geom_point(aes(y = Cumul), color = "#d73027", size = 3.5) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50") +
+  annotate("text", x = 10.5, y = 83, label = "80%", color = "gray40", size = 4) +
+  labs(y = "Vysvetlená variabilita (%)", x = NULL,
+       title = "PC1+PC2 vysvetľujú 70% variability, PC1–PC4 pokrývajú >85%") +
+  theme_minimal(base_size = 13) +
+  theme(plot.title = element_text(size = 12))
+```
+
+## Biplót — projekcia do 2D
+
+```{r}
+#| echo: false
+#| fig-height: 4.5
+#| fig-width: 10
+
+mtcars2 <- mtcars |>
+  mutate(transmission = factor(am, labels = c("Automatická", "Manuálna")))
+
+autoplot(pca, data = mtcars2,
+         colour = "transmission",
+         loadings = TRUE,
+         loadings.label = TRUE,
+         loadings.label.size = 3.8,
+         loadings.colour = "#d73027",
+         loadings.label.colour = "#333333") +
+  scale_color_manual(values = c("#2166ac", "#f4a582")) +
+  labs(color = "Prevodovka",
+       title = "Manuálne vs. automatické autá sa jasne separujú v priestore PC1–PC2") +
+  theme_minimal(base_size = 13) +
+  theme(plot.title = element_text(size = 12))
+```
+
+## Interpretácia komponentov
+
+:::: {.columns}
+
+::: {.column width="46%"}
+**PC1 — „Sila vozidla"** (`r round(pve[1],1)`%)
+
+- ➕ `cyl`, `disp`, `hp`, `wt`, `carb`
+- ➖ `mpg`, `drat`
+
+*Silnejší motor = vyššia spotreba*
+
+**PC2 — „Konfigurácia"** (`r round(pve[2],1)`%)
+
+- ➕ `qsec`, `vs`
+- ➖ `carb`, `hp`
+:::
+
+::: {.column width="54%"}
+```{r}
+#| echo: false
+#| fig-height: 4
+#| fig-width: 6
+
+as.data.frame(pca$rotation[,1:2]) |>
+  mutate(var = rownames(pca$rotation)) |>
+  pivot_longer(-var, names_to = "PC", values_to = "loading") |>
+  ggplot(aes(reorder(var, abs(loading)), loading, fill = loading > 0)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~PC) +
+  coord_flip() +
+  scale_fill_manual(values = c("#d73027", "#2166ac")) +
+  theme_minimal(base_size = 12) +
+  labs(x = NULL, y = "Záťaž")
+```
+:::
+
+::::
+
+## Záver
+
+:::: {.columns}
+
+::: {.column width="48%"}
+**Výsledky:**
+
+| | |
+|---|---|
+| Pôvodné premenné | 11 |
+| Komponenty (80%) | 4 |
+| PC1+PC2 variabilita | `r round(cumsum(pve)[2],1)`% |
+| Separácia áut | ✅ |
+
+:::
+
+::: {.column width="52%"}
+**Kľúčové zistenia:**
+
+- PCA zredukovala 11D → **2–4 dimenzie**
+- PC1 zachytáva **výkonnosť** vozidla
+- Manuálne/auto. autá tvoria **odlišné zhluky**
+- Metóda vychádza z **lineárnej algebry**
+:::
+
+::::
+
+. . .
+
+> *„PCA is arguably the most important tool in multivariate statistics."*  
+> — Jolliffe & Cadima (2016)

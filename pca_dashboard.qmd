@@ -1,0 +1,239 @@
+---
+title: "PCA Dashboard — Analýza mtcars"
+author: "Artem Vara"
+date: "2026-04-29"
+format:
+  dashboard:
+    theme: cosmo
+    scrolling: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+library(ggplot2)
+library(ggfortify)
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(knitr)
+library(kableExtra)
+
+# PCA výpočet
+pca    <- prcomp(mtcars, center = TRUE, scale. = TRUE)
+lambda <- pca$sdev^2
+pve    <- lambda / sum(lambda) * 100
+cumul  <- cumsum(pve)
+
+mtcars2 <- mtcars |>
+  mutate(
+    transmission = factor(am, labels = c("Automatická", "Manuálna")),
+    cyl_f        = factor(cyl),
+    car          = rownames(mtcars)
+  )
+
+# Scores (projekcia)
+scores <- as.data.frame(pca$x) |>
+  mutate(
+    car          = rownames(mtcars),
+    transmission = mtcars2$transmission,
+    cyl_f        = mtcars2$cyl_f,
+    mpg          = mtcars$mpg
+  )
+```
+
+# Prehľad {orientation="columns"}
+
+## Column {width="25%"}
+
+```{r}
+#| content: valuebox
+#| title: "Počet premenných"
+list(icon = "table", color = "primary", value = ncol(mtcars))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Počet áut"
+list(icon = "car-front", color = "info", value = nrow(mtcars))
+```
+
+```{r}
+#| content: valuebox
+#| title: "PC1+PC2 variabilita"
+list(icon = "percent", color = "success", value = paste0(round(cumul[2], 1), "%"))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Komponenty pre 80%"
+list(icon = "stack", color = "warning", value = which(cumul >= 80)[1])
+```
+
+## Column {width="75%"}
+
+### Row {height="50%"}
+
+#### Scree Plot {width="50%"}
+
+```{r}
+#| title: "Vysvetlená variabilita (Scree Plot)"
+
+df_scree <- data.frame(
+  PC    = paste0("PC", 1:11),
+  PVE   = round(pve, 2),
+  Cumul = round(cumul, 2)
+)
+
+plot_ly(df_scree, x = ~PC) |>
+  add_bars(y = ~PVE, name = "PVE (%)",
+           marker = list(color = "#2166ac", opacity = 0.8)) |>
+  add_lines(y = ~Cumul, name = "Kumulatívne (%)",
+            line = list(color = "#d73027", width = 2.5),
+            marker = list(size = 7, color = "#d73027")) |>
+  add_segments(x = "PC1", xend = "PC11",
+               y = 80, yend = 80,
+               line = list(dash = "dash", color = "gray", width = 1),
+               showlegend = FALSE) |>
+  layout(
+    yaxis = list(title = "%"),
+    xaxis = list(title = ""),
+    legend = list(orientation = "h", y = -0.2),
+    hovermode = "x unified"
+  )
+```
+
+#### Loadings {width="50%"}
+
+```{r}
+#| title: "Záťaže premenných na PC1 a PC2"
+
+load_df <- as.data.frame(pca$rotation[, 1:2]) |>
+  mutate(var = rownames(pca$rotation)) |>
+  pivot_longer(-var, names_to = "PC", values_to = "loading")
+
+plot_ly(load_df, x = ~loading, y = ~reorder(var, abs(loading)),
+        color = ~PC, type = "bar", orientation = "h",
+        colors = c("#2166ac", "#d73027")) |>
+  layout(
+    barmode = "group",
+    xaxis = list(title = "Záťaž"),
+    yaxis = list(title = ""),
+    legend = list(orientation = "h", y = -0.2)
+  )
+```
+
+### Row {height="50%"}
+
+#### Biplót {width="60%"}
+
+```{r}
+#| title: "Biplót — projekcia áut do PC1–PC2"
+
+# Loadings šípky (škálované)
+scale_factor <- 3
+arrows_df <- as.data.frame(pca$rotation[, 1:2]) * scale_factor
+arrows_df$var <- rownames(arrows_df)
+
+p <- plot_ly()
+
+# Body (autá)
+for (tr in levels(scores$transmission)) {
+  sub <- scores[scores$transmission == tr, ]
+  p <- p |> add_markers(
+    data = sub,
+    x = ~PC1, y = ~PC2,
+    name = tr,
+    text = ~car,
+    hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>PC2: %{y:.2f}<extra></extra>",
+    marker = list(size = 9)
+  )
+}
+
+# Šípky loadings
+for (i in seq_len(nrow(arrows_df))) {
+  p <- p |>
+    add_segments(
+      x = 0, xend = arrows_df$PC1[i],
+      y = 0, yend = arrows_df$PC2[i],
+      line = list(color = "#d73027", width = 1.5),
+      showlegend = FALSE
+    ) |>
+    add_annotations(
+      x = arrows_df$PC1[i] * 1.1,
+      y = arrows_df$PC2[i] * 1.1,
+      text = arrows_df$var[i],
+      showarrow = FALSE,
+      font = list(color = "#d73027", size = 11)
+    )
+}
+
+p |> layout(
+  xaxis = list(title = paste0("PC1 (", round(pve[1],1), "%)")),
+  yaxis = list(title = paste0("PC2 (", round(pve[2],1), "%)")),
+  hovermode = "closest"
+)
+```
+
+#### Dáta {width="40%"}
+
+```{r}
+#| title: "Dataset mtcars — prehľad"
+
+mtcars |>
+  select(mpg, cyl, hp, wt, am) |>
+  mutate(
+    am = ifelse(am == 0, "Auto", "Manual"),
+    cyl = factor(cyl)
+  ) |>
+  kable(col.names = c("mpg", "cyl", "hp", "wt", "Prev."),
+        digits = 1) |>
+  kable_styling(font_size = 12, full_width = TRUE,
+                bootstrap_options = c("striped", "hover", "condensed")) |>
+  scroll_box(height = "280px")
+```
+
+# Detailná analýza {orientation="columns"}
+
+## Column {width="50%"}
+
+```{r}
+#| title: "Rozptyl áut podľa PC1 a počtu valcov"
+
+plot_ly(scores, x = ~PC1, y = ~PC2,
+        color = ~cyl_f, text = ~car,
+        type = "scatter", mode = "markers+text",
+        textposition = "top center",
+        marker = list(size = 10),
+        hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>PC2: %{y:.2f}<extra></extra>") |>
+  layout(
+    xaxis = list(title = paste0("PC1 (", round(pve[1],1), "%)")),
+    yaxis = list(title = paste0("PC2 (", round(pve[2],1), "%)")),
+    legend = list(title = list(text = "Počet valcov"))
+  )
+```
+
+## Column {width="50%"}
+
+```{r}
+#| title: "Spotreba (mpg) vs. PC1 — lineárny vzťah"
+
+fit <- lm(mpg ~ PC1, data = scores)
+scores$fitted <- fitted(fit)
+
+plot_ly(scores, x = ~PC1) |>
+  add_markers(y = ~mpg, text = ~car, color = ~transmission,
+              colors = c("#2166ac", "#d73027"),
+              marker = list(size = 9),
+              hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>mpg: %{y:.1f}<extra></extra>") |>
+  add_lines(y = ~fitted, showlegend = FALSE,
+            line = list(color = "gray40", dash = "dash", width = 2)) |>
+  layout(
+    xaxis = list(title = paste0("PC1 (", round(pve[1],1), "%)")),
+    yaxis = list(title = "Spotreba (mpg)"),
+    legend = list(title = list(text = "Prevodovka"))
+  )
+```
