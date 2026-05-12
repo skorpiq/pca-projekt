@@ -2,7 +2,7 @@
 title: "Analýza hlavných komponentov (PCA)"
 subtitle: "Softvér na analýzu údajov — Projektová dokumentácia"
 author: "Artem Vara"
-date: "2026-05-11"
+date: "2026-04-15"
 format:
   html:
     theme: cosmo
