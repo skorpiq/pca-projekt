@@ -2,7 +2,7 @@
 title: "Analýza hlavných komponentov (PCA)"
 subtitle: "Softvér na analýzu údajov — Projektová dokumentácia"
 author: "Artem Vara"
-date: "2026-04-15"
+date: "2026-05-10"
 format:
   html:
     theme: cosmo
@@ -16,7 +16,7 @@ execute:
 
 Tento projekt sa zaoberá metódou **Analýzy hlavných komponentov (PCA)** — technikou z lineárnej algebry na redukciu dimenzionality dát. Metóda je aplikovaná na dataset `mtcars` (32 automobilov, 11 premenných).
 
----
+------------------------------------------------------------------------
 
 ## Dokumenty projektu
 
@@ -26,7 +26,7 @@ Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matemati
 
 [Otvoriť technickú správu](pca_projekt.html)
 
----
+------------------------------------------------------------------------
 
 ### Prezentácia
 
@@ -34,7 +34,7 @@ Revealjs prezentácia (10 slajdov) pokrývajúca matematické základy PCA, ruč
 
 [Otvoriť prezentáciu](pca_prezentacia.html)
 
----
+------------------------------------------------------------------------
 
 ### Interaktívny dashboard
 
@@ -42,21 +42,20 @@ Jednostránkový dashboard s interaktívnymi grafmi: scree plot, biplót, záťa
 
 [Otvoriť dashboard](pca_dashboard.html)
 
----
+------------------------------------------------------------------------
 
 ## Zdrojové súbory
 
 Všetky zdrojové súbory projektu (`.qmd`) sú súčasťou odovzdaného archívu.
 
-| Súbor | Popis |
-|---|---|
-| `pca_projekt.qmd` | Zdrojový kód technickej správy |
-| `pca_prezentacia.qmd` | Zdrojový kód prezentácie |
-| `pca_dashboard.qmd` | Zdrojový kód dashboardu |
-| `references.bib` | Bibliografické záznamy |
-| `styles.css` | Štýly prezentácie |
+| Súbor                 | Popis                          |
+|-----------------------|--------------------------------|
+| `pca_projekt.qmd`     | Zdrojový kód technickej správy |
+| `pca_prezentacia.qmd` | Zdrojový kód prezentácie       |
+| `pca_dashboard.qmd`   | Zdrojový kód dashboardu        |
+| `references.bib`      | Bibliografické záznamy         |
 
----
+------------------------------------------------------------------------
 
 ## Použité nástroje
 
