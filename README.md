@@ -1,6 +1,6 @@
 # Analýza hlavných komponentov (PCA)
 
-**Autor:** Tomáš Bacigál &nbsp;**Predmet:** Softvér na analýzu údajov R
+**Autor:** Artem Vara &nbsp;**Predmet:** Softvér na analýzu údajov R
 
 Projekt skúma metódu redukcie dimenzionality **Principal Component Analysis (PCA)** na datasete automobilov `mtcars`. Ukazuje, ako je možné zredukovať 11-rozmerný priestor premenných na 2–4 hlavné komponenty, ktoré zachovávajú viac ako 85% celkovej variability dát. Matematicky vychádza zo spektrálneho rozkladu kovariančnej matice:
 
