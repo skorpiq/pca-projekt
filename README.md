@@ -17,9 +17,7 @@ $$\mathbf{C}\,\mathbf{v}_i = \lambda_i\,\mathbf{v}_i, \qquad \text{PVE}_k = \fra
 ├── pca_projekt.qmd          # technická správa (HTML + PDF)
 ├── pca_prezentacia.qmd      # prezentácia revealjs (10 slajdov)
 ├── pca_dashboard.qmd        # Quarto dashboard (interaktívny)
-├── references.bib           # bibliografia
-├── styles.css               # vlastné CSS pre prezentáciu
-└── _quarto.yml              # konfigurácia projektu
+└── references.bib           # bibliografia 
 ```
 
 ---
