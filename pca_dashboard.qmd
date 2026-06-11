@@ -6,6 +6,11 @@ format:
   dashboard:
     theme: cosmo
     scrolling: false
+    nav-buttons:
+      - icon: house-fill
+        href: index.html
+      - icon: github
+        href: https://github.com/skorpiq/pca-projekt
 execute:
   echo: false
   warning: false
@@ -21,28 +26,41 @@ library(tidyr)
 library(plotly)
 library(knitr)
 library(kableExtra)
+library(DT)
+library(crosstalk)
 
 # PCA výpočet
-pca    <- prcomp(mtcars, center = TRUE, scale. = TRUE)
+pca <- prcomp(mtcars, center = TRUE, scale. = TRUE)
 lambda <- pca$sdev^2
-pve    <- lambda / sum(lambda) * 100
-cumul  <- cumsum(pve)
+pve <- lambda / sum(lambda) * 100
+cumul <- cumsum(pve)
+cor_mat <- cor(mtcars)
 
 mtcars2 <- mtcars |>
   mutate(
     transmission = factor(am, labels = c("Automatická", "Manuálna")),
-    cyl_f        = factor(cyl),
-    car          = rownames(mtcars)
+    cyl_f = factor(cyl),
+    car = rownames(mtcars)
   )
 
 # Scores (projekcia)
 scores <- as.data.frame(pca$x) |>
   mutate(
-    car          = rownames(mtcars),
+    car = rownames(mtcars),
     transmission = mtcars2$transmission,
-    cyl_f        = mtcars2$cyl_f,
-    mpg          = mtcars$mpg
+    cyl_f = mtcars2$cyl_f,
+    mpg = mtcars$mpg
   )
+
+# Regresná priamka mpg ~ PC1 (z celých dát)
+fit <- lm(mpg ~ PC1, data = scores)
+scores$fitted <- fitted(fit)
+
+# Zdieľané dáta pre prepojené grafy (crosstalk)
+shared_scores <- SharedData$new(
+  scores |> select(car, PC1, PC2, PC3, mpg, transmission, cyl_f),
+  key = ~car, group = "mtcars-pca"
+)
 ```
 
 # Prehľad {orientation="columns"}
@@ -81,10 +99,9 @@ list(icon = "stack", color = "warning", value = which(cumul >= 80)[1])
 
 ```{r}
 #| title: "Vysvetlená variabilita (Scree Plot)"
-
 df_scree <- data.frame(
-  PC    = paste0("PC", 1:11),
-  PVE   = round(pve, 2),
+  PC = paste0("PC", 1:11),
+  PVE = round(pve, 2),
   Cumul = round(cumul, 2)
 )
 
@@ -110,7 +127,6 @@ plot_ly(df_scree, x = ~PC) |>
 
 ```{r}
 #| title: "Záťaže premenných na PC1 a PC2"
-
 load_df <- as.data.frame(pca$rotation[, 1:2]) |>
   mutate(var = rownames(pca$rotation)) |>
   pivot_longer(-var, names_to = "PC", values_to = "loading")
@@ -132,7 +148,6 @@ plot_ly(load_df, x = ~loading, y = ~reorder(var, abs(loading)),
 
 ```{r}
 #| title: "Biplót — projekcia áut do PC1–PC2"
-
 # Loadings šípky (škálované)
 scale_factor <- 3
 arrows_df <- as.data.frame(pca$rotation[, 1:2]) * scale_factor
@@ -181,59 +196,111 @@ p |> layout(
 #### Dáta {width="40%"}
 
 ```{r}
-#| title: "Dataset mtcars — prehľad"
-
-mtcars |>
-  select(mpg, cyl, hp, wt, am) |>
-  mutate(
-    am = ifelse(am == 0, "Auto", "Manual"),
-    cyl = factor(cyl)
+#| title: "Dataset mtcars — interaktívna tabuľka"
+mtcars2 |>
+  select(car, mpg, cyl, hp, wt, transmission) |>
+  datatable(
+    rownames = FALSE,
+    colnames = c("Auto", "mpg", "cyl", "hp", "wt", "Prevodovka"),
+    filter = "top",
+    options = list(pageLength = 6, dom = "tip", scrollY = "220px",
+                   scrollCollapse = TRUE, paging = FALSE)
   ) |>
-  kable(col.names = c("mpg", "cyl", "hp", "wt", "Prev."),
-        digits = 1) |>
-  kable_styling(font_size = 12, full_width = TRUE,
-                bootstrap_options = c("striped", "hover", "condensed")) |>
-  scroll_box(height = "280px")
+  formatRound(c("mpg", "wt"), 1)
 ```
 
-# Detailná analýza {orientation="columns"}
+# Detailná analýza {orientation="rows"}
 
-## Column {width="50%"}
+## Row {height="20%"}
 
 ```{r}
-#| title: "Rozptyl áut podľa PC1 a počtu valcov"
+#| title: "Filtre a výber (platia pre oba grafy — skúste aj výber lasom priamo v grafe)"
+bscols(
+  widths = c(6, 6),
+  filter_checkbox("f_trans", "Prevodovka", shared_scores, ~transmission, inline = TRUE),
+  filter_checkbox("f_cyl", "Počet valcov", shared_scores, ~cyl_f, inline = TRUE)
+)
+```
 
-plot_ly(scores, x = ~PC1, y = ~PC2,
+## Row {height="80%"}
+
+### Column {width="50%"}
+
+```{r}
+#| title: "Rozptyl áut podľa PC1–PC2 a počtu valcov"
+plot_ly(shared_scores, x = ~PC1, y = ~PC2,
         color = ~cyl_f, text = ~car,
-        type = "scatter", mode = "markers+text",
-        textposition = "top center",
+        type = "scatter", mode = "markers",
         marker = list(size = 10),
         hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>PC2: %{y:.2f}<extra></extra>") |>
   layout(
     xaxis = list(title = paste0("PC1 (", round(pve[1],1), "%)")),
     yaxis = list(title = paste0("PC2 (", round(pve[2],1), "%)")),
-    legend = list(title = list(text = "Počet valcov"))
-  )
+    legend = list(title = list(text = "Počet valcov")),
+    dragmode = "lasso"
+  ) |>
+  highlight(on = "plotly_selected", off = "plotly_deselect")
 ```
 
-## Column {width="50%"}
+### Column {width="50%"}
 
 ```{r}
-#| title: "Spotreba (mpg) vs. PC1 — lineárny vzťah"
-
-fit <- lm(mpg ~ PC1, data = scores)
-scores$fitted <- fitted(fit)
-
-plot_ly(scores, x = ~PC1) |>
-  add_markers(y = ~mpg, text = ~car, color = ~transmission,
+#| title: "Spotreba (mpg) vs. PC1 — lineárny vzťah (priamka z celých dát)"
+plot_ly() |>
+  add_markers(data = shared_scores, x = ~PC1, y = ~mpg,
+              text = ~car, color = ~transmission,
               colors = c("#2166ac", "#d73027"),
               marker = list(size = 9),
               hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>mpg: %{y:.1f}<extra></extra>") |>
-  add_lines(y = ~fitted, showlegend = FALSE,
-            line = list(color = "gray40", dash = "dash", width = 2)) |>
+  add_lines(data = scores |> arrange(PC1), x = ~PC1, y = ~fitted,
+            showlegend = FALSE, inherit = FALSE,
+            line = list(color = "gray", dash = "dash", width = 2)) |>
   layout(
     xaxis = list(title = paste0("PC1 (", round(pve[1],1), "%)")),
     yaxis = list(title = "Spotreba (mpg)"),
-    legend = list(title = list(text = "Prevodovka"))
+    legend = list(title = list(text = "Prevodovka")),
+    dragmode = "lasso"
+  ) |>
+  highlight(on = "plotly_selected", off = "plotly_deselect")
+```
+
+# 3D a korelácie {orientation="columns"}
+
+## Column {width="55%"}
+
+```{r}
+#| title: "3D projekcia: PC1–PC2–PC3 (>85 % variability) — graf je možné otáčať myšou"
+plot_ly(scores, x = ~PC1, y = ~PC2, z = ~PC3,
+        color = ~transmission, colors = c("#2166ac", "#d73027"),
+        text = ~car, type = "scatter3d", mode = "markers",
+        marker = list(size = 5),
+        hovertemplate = "<b>%{text}</b><br>PC1: %{x:.2f}<br>PC2: %{y:.2f}<br>PC3: %{z:.2f}<extra></extra>") |>
+  layout(
+    legend = list(title = list(text = "Prevodovka"), orientation = "h"),
+    scene = list(
+      xaxis = list(title = paste0("PC1 (", round(pve[1], 1), "%)")),
+      yaxis = list(title = paste0("PC2 (", round(pve[2], 1), "%)")),
+      zaxis = list(title = paste0("PC3 (", round(pve[3], 1), "%)"))
+    )
+  )
+```
+
+## Column {width="45%"}
+
+```{r}
+#| title: "Interaktívna korelačná matica premenných"
+plot_ly(
+  x = colnames(cor_mat), y = colnames(cor_mat),
+  z = round(cor_mat, 2),
+  type = "heatmap",
+  colors = colorRamp(c("#d73027", "white", "#1a9850")),
+  zmin = -1, zmax = 1,
+  texttemplate = "%{z}",
+  textfont = list(size = 9),
+  hovertemplate = "%{y} × %{x}<br>r = %{z}<extra></extra>"
+) |>
+  layout(
+    xaxis = list(title = ""),
+    yaxis = list(title = "", autorange = "reversed")
   )
 ```

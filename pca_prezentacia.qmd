@@ -14,6 +14,9 @@ format:
     height: 720
     margin: 0.04
     fontsize: 27px
+    chalkboard: true
+    menu: true
+bibliography: references.bib
 execute:
   echo: true
   warning: false
@@ -37,7 +40,6 @@ pve <- lambda / sum(lambda) * 100
 ## Problém vysokej dimenzionality
 
 :::: {.columns}
-
 ::: {.column width="52%"}
 **Situácia:**
 
@@ -61,8 +63,59 @@ pairs(mtcars[, 1:5],
       cex.main = 0.9)
 ```
 :::
-
 ::::
+
+::: {.notes}
+Motivácia: párové grafy fungujú pre 3–5 premenných, pre 11 ich je 55 dvojíc. Zdôrazniť, že cieľom nie je zahodiť dáta, ale nájsť menej rozmerov, ktoré nesú väčšinu informácie.
+:::
+
+## Geometrická intuícia
+
+:::: {.columns}
+::: {.column width="46%"}
+PCA je v podstate **rotácia súradnicovej sústavy**:
+
+- **PC1** = smer, v ktorom majú dáta najväčší rozptyl
+- **PC2** = kolmý smer s najväčším zvyšným rozptylom
+- Žiadna informácia sa nestráca — len sa **preusporiada**
+
+Redukcia = ponechanie prvých $k$ nových osí.
+:::
+
+::: {.column width="54%"}
+```{r}
+#| echo: false
+#| fig-height: 4.2
+#| fig-width: 5.5
+Z2 <- scale(mtcars[, c("wt", "hp")])
+p2 <- prcomp(Z2)
+arr <- p2$rotation %*% diag(p2$sdev) * 2
+df2 <- as.data.frame(Z2)
+
+ggplot(df2, aes(wt, hp)) +
+  geom_point(color = "#2166ac", size = 2.5, alpha = 0.8) +
+  geom_segment(x = 0, y = 0, xend = arr[1, 1], yend = arr[2, 1],
+               arrow = grid::arrow(length = grid::unit(0.3, "cm")),
+               color = "#d73027", linewidth = 1.2) +
+  geom_segment(x = 0, y = 0, xend = arr[1, 2], yend = arr[2, 2],
+               arrow = grid::arrow(length = grid::unit(0.3, "cm")),
+               color = "#1a9850", linewidth = 1.2) +
+  annotate("text", x = arr[1, 1] * 1.18, y = arr[2, 1] * 1.18,
+           label = "PC1", color = "#d73027", fontface = "bold", size = 5) +
+  annotate("text", x = arr[1, 2] * 1.35, y = arr[2, 2] * 1.35,
+           label = "PC2", color = "#1a9850", fontface = "bold", size = 5) +
+  coord_equal() +
+  labs(x = "wt (štandardizované)", y = "hp (štandardizované)",
+       title = "Dve premenné z mtcars: PC1 mieri pozdĺž najväčšieho rozptylu") +
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(size = 11))
+```
+:::
+::::
+
+::: {.notes}
+Kľúčový slajd pre intuíciu pred matematikou. Ukázať rukou: keby sme všetky body premietli na červenú os PC1, stratíme len málo informácie — to je redukcia z 2D na 1D. PCA robí to isté v 11 rozmeroch.
+:::
 
 ## Matematické základy
 
@@ -70,18 +123,20 @@ pairs(mtcars[, 1:5],
 
 ::: {.incremental}
 1. **Štandardizácia**: $z_{ij} = \dfrac{x_{ij} - \bar{x}_j}{s_j}$
-
 2. **Kovariančná matica**: $\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
-
 3. **Spektrálny rozklad**: $\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i$
-
 4. **Projekcia**: $\mathbf{PC}_k = \mathbf{Z}\mathbf{v}_k$
 :::
 
 . . .
 
 **Vysvetlená variabilita** $k$-teho komponentu:
+
 $$\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%$$
+
+::: {.notes}
+Pri kroku 1 zdôrazniť, prečo štandardizujeme: hp je v stovkách, drat v jednotkách — bez štandardizácie by PCA ovládli premenné s veľkou škálou. Vlastné čísla = rozptyl pozdĺž príslušného vlastného vektora.
+:::
 
 ## Dataset mtcars
 
@@ -96,25 +151,33 @@ kable(head(mtcars, 6), digits = 1) |>
 **32** modelov automobilov (1974) · **11** technických premenných · Zdroj: Henderson & Velleman (1981)
 :::
 
+::: {.notes}
+Klasický učebnicový dataset z časopisu Motor Trend. Premenné: spotreba, valce, objem, výkon, hmotnosť, zrýchlenie, typ motora a prevodovky. Malý, ale ideálny na demonštráciu metódy.
+:::
+
 ## Výpočet PCA v R
 
 ```{r}
 #| output-location: column
-
+#| code-line-numbers: "|1-3|5-6|8-13"
 pca <- prcomp(mtcars,
               center = TRUE,
               scale. = TRUE)
 
 lambda <- pca$sdev^2
-pve    <- lambda / sum(lambda) * 100
+pve <- lambda / sum(lambda) * 100
 
 data.frame(
-  PC         = paste0("PC", 1:5),
+  PC = paste0("PC", 1:5),
   Eigenvalue = round(lambda[1:5], 2),
-  PVE        = round(pve[1:5], 2),
+  PVE = round(pve[1:5], 2),
   Cumulative = round(cumsum(pve)[1:5], 2)
 )
 ```
+
+::: {.notes}
+Prechádzať kód po krokoch (šípka dopredu zvýrazňuje riadky): prcomp robí štandardizáciu aj rozklad naraz; sdev² = vlastné čísla; tabuľka ukazuje, že PC1 má vlastné číslo ~6.6, čo je 60 % variability.
+:::
 
 ## Scree Plot
 
@@ -122,13 +185,11 @@ data.frame(
 #| echo: false
 #| fig-height: 4.5
 #| fig-width: 10
-
 df <- data.frame(
-  PC    = factor(paste0("PC", 1:11), levels = paste0("PC", 1:11)),
-  PVE   = pve,
+  PC = factor(paste0("PC", 1:11), levels = paste0("PC", 1:11)),
+  PVE = pve,
   Cumul = cumsum(pve)
 )
-
 ggplot(df, aes(x = PC)) +
   geom_col(aes(y = PVE), fill = "#2166ac", alpha = 0.8, width = 0.6) +
   geom_line(aes(y = Cumul, group = 1), color = "#d73027", linewidth = 1.4) +
@@ -141,13 +202,16 @@ ggplot(df, aes(x = PC)) +
   theme(plot.title = element_text(size = 12))
 ```
 
+::: {.notes}
+Hľadáme „lakeť" — miesto, kde krivka prestáva prudko klesať. Tu je medzi PC2 a PC3. Pravidlo 80 % hovorí ponechať 4 komponenty; na vizualizáciu stačia 2.
+:::
+
 ## Biplót — projekcia do 2D
 
 ```{r}
 #| echo: false
 #| fig-height: 4.5
 #| fig-width: 10
-
 mtcars2 <- mtcars |>
   mutate(transmission = factor(am, labels = c("Automatická", "Manuálna")))
 
@@ -165,10 +229,13 @@ autoplot(pca, data = mtcars2,
   theme(plot.title = element_text(size = 12))
 ```
 
+::: {.notes}
+Body = autá, šípky = pôvodné premenné. Šípky rovnakým smerom = korelované premenné (hp, cyl, disp). Manuálne autá vľavo (ľahšie, úspornejšie), automaty vpravo. Upozorniť: dĺžky šípok v biplóte sú škálované, smer je dôležitejší než dĺžka.
+:::
+
 ## Interpretácia komponentov
 
 :::: {.columns}
-
 ::: {.column width="46%"}
 **PC1 — „Sila vozidla"** (`r round(pve[1],1)`%)
 
@@ -188,7 +255,6 @@ autoplot(pca, data = mtcars2,
 #| echo: false
 #| fig-height: 4
 #| fig-width: 6
-
 as.data.frame(pca$rotation[,1:2]) |>
   mutate(var = rownames(pca$rotation)) |>
   pivot_longer(-var, names_to = "PC", values_to = "loading") |>
@@ -201,23 +267,38 @@ as.data.frame(pca$rotation[,1:2]) |>
   labs(x = NULL, y = "Záťaž")
 ```
 :::
-
 ::::
+
+::: {.notes}
+Interpretácia komponentov je vždy čiastočne subjektívna — pomenovania „sila" a „konfigurácia" sú naše označenia podľa toho, ktoré premenné majú najväčšie záťaže. Záporná záťaž mpg na PC1: vyššia hodnota PC1 = silnejšie auto = nižšie mpg.
+:::
+
+## Obmedzenia metódy
+
+::: {.incremental}
+- **Linearita** — PCA zachytí len lineárne vzťahy; nelineárnu štruktúru (kruhy, špirály) nevidí
+- **Citlivosť na škálovanie** — bez štandardizácie dominujú premenné s veľkou škálou
+- **Citlivosť na odľahlé hodnoty** — jediný outlier dokáže otočiť smer komponentov
+- **Interpretovateľnosť** — komponenty sú lineárne kombinácie všetkých premenných, nie pôvodné veličiny
+- **Alternatívy pre nelineárne dáta**: kernel PCA, t-SNE, UMAP
+:::
+
+::: {.notes}
+Dôležitý slajd pre diskusiu: žiadna metóda nie je univerzálna. Na mtcars PCA funguje výborne, lebo premenné sú silno lineárne korelované. Pri obrázkoch alebo genomických dátach by sme siahli po nelineárnych metódach.
+:::
 
 ## Záver
 
 :::: {.columns}
-
 ::: {.column width="48%"}
 **Výsledky:**
 
-| | |
+|  |  |
 |---|---|
 | Pôvodné premenné | 11 |
 | Komponenty (80%) | 4 |
 | PC1+PC2 variabilita | `r round(cumsum(pve)[2],1)`% |
 | Separácia áut | ✅ |
-
 :::
 
 ::: {.column width="52%"}
@@ -228,10 +309,17 @@ as.data.frame(pca$rotation[,1:2]) |>
 - Manuálne/auto. autá tvoria **odlišné zhluky**
 - Metóda vychádza z **lineárnej algebry**
 :::
-
 ::::
 
 . . .
 
-> *„PCA is arguably the most important tool in multivariate statistics."*  
-> — Jolliffe & Cadima (2016)
+> *„PCA is arguably the most important tool in multivariate statistics."* [@jolliffe2016]
+
+::: {.notes}
+Zhrnúť hlavnú myšlienku jednou vetou: 11 čísel o každom aute sa dá nahradiť dvomi súradnicami bez podstatnej straty informácie. Poďakovať a otvoriť priestor na otázky.
+:::
+
+## Literatúra {.smaller}
+
+::: {#refs}
+:::
