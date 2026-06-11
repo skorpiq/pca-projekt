@@ -3,6 +3,7 @@ title: "Analýza hlavných komponentov (PCA)"
 subtitle: "Softvér na analýzu údajov — Projektová správa"
 author: "Artem Vara"
 date: "2026-04-29"
+lang: sk
 format:
   html:
     toc: true
@@ -19,6 +20,9 @@ format:
     geometry: margin=2.5cm
     fontsize: 12pt
     documentclass: article
+    include-in-header:
+      text: |
+        \AtBeginDocument{\shorthandoff{'-}}
 execute:
   echo: true
   warning: false
@@ -48,16 +52,18 @@ PCA je technika zo štatistiky a lineárnej algebry, ktorá transformuje pôvodn
 
 Metóda nachádza uplatnenie v mnohých oblastiach:
 
-- **Biológia**: klasifikácia druhov podľa morfologických znakov [@jolliffe2016]
-- **Ekonomika**: redukcia makroekonomických indikátorov
-- **Počítačové videnie**: rozpoznávanie tvárí (Eigenfaces)
-- **Chémia**: spektroskopická analýza
+-   **Biológia**: klasifikácia druhov podľa morfologických znakov [@jolliffe2016]
+-   **Ekonomika**: redukcia makroekonomických indikátorov
+-   **Počítačové videnie**: rozpoznávanie tvárí (Eigenfaces)
+-   **Chémia**: spektroskopická analýza
 
 V tomto projekte aplikujeme PCA na klasický dataset `mtcars`, ktorý obsahuje technické parametre 32 automobilov z roku 1974. Cieľom je ukázať, ako je možné 10-rozmerný priestor premenných zredukovať na 2–3 dimenzie bez výraznej straty informácie.
 
+Správa je členená nasledovne: v @sec-teoria zhrnieme matematické pozadie metódy, @sec-data popisuje použitý dataset, v @sec-vypocet vykonáme samotný výpočet PCA a v @sec-vysledky prezentujeme výsledky s vizualizáciami. Závery sú zhrnuté v @sec-zaver.
+
 # Teoretické pozadie {#sec-teoria}
 
-## Kovariančná matica
+## Kovariančná matica {#sec-kovariancia}
 
 Nech $\mathbf{X}$ je dátová matica rozmeru $n \times p$, kde $n$ je počet pozorovaní a $p$ je počet premenných. Po **štandardizácii** (odčítaním priemeru a delením smerodajnou odchýlkou) dostaneme maticu $\mathbf{Z}$.
 
@@ -65,17 +71,17 @@ Kovariančná (resp. korelačná) matica je definovaná ako:
 
 $$
 \mathbf{C} = \frac{1}{n-1} \mathbf{Z}^\top \mathbf{Z}
-$$
+$$ {#eq-cov}
 
 Matica $\mathbf{C}$ je symetrická a pozitívne semidefinitná rozmeru $p \times p$.
 
-## Vlastné čísla a vlastné vektory
+## Vlastné čísla a vlastné vektory {#sec-eigen}
 
-Jadrom PCA je **spektrálny rozklad** kovariančnej matice:
+Jadrom PCA je **spektrálny rozklad** kovariančnej matice definovanej v @eq-cov:
 
 $$
 \mathbf{C} \mathbf{v}_i = \lambda_i \mathbf{v}_i, \quad i = 1, \ldots, p
-$$
+$$ {#eq-eigen}
 
 kde $\lambda_i$ sú **vlastné čísla** (eigenvalues) a $\mathbf{v}_i$ sú zodpovedajúce **vlastné vektory** (eigenvectors). Vlastné vektory sú navzájom ortogonálne:
 
@@ -83,7 +89,7 @@ $$
 \mathbf{v}_i^\top \mathbf{v}_j = \begin{cases} 1 & i = j \\ 0 & i \neq j \end{cases}
 $$
 
-## Hlavné komponenty
+## Hlavné komponenty {#sec-komponenty}
 
 **Hlavné komponenty** sú lineárne kombinácie pôvodných premenných:
 
@@ -95,23 +101,23 @@ Podiel variability vysvetlenej $k$-tym komponentom:
 
 $$
 \text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i}
-$$
+$$ {#eq-pve}
 
 Vlastné vektory $\mathbf{v}_k$ sa nazývajú **loadings** (záťaže) a udávajú, ako silno každá pôvodná premenná prispieva k danému komponentu.
 
-## Algoritmus PCA — krok za krokom
+## Algoritmus PCA — krok za krokom {#sec-algoritmus}
 
-1. Štandardizácia dát: $z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}$
-2. Výpočet kovariančnej matice: $\mathbf{C} = \frac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
-3. Spektrálny rozklad: $\mathbf{C} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^\top$
-4. Zoradenie vlastných čísel: $\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_p$
-5. Projekcia dát: $\mathbf{PC} = \mathbf{Z} \mathbf{V}$
+1.  Štandardizácia dát: $z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}$
+2.  Výpočet kovariančnej matice (@eq-cov): $\mathbf{C} = \frac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
+3.  Spektrálny rozklad (@eq-eigen): $\mathbf{C} = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^\top$
+4.  Zoradenie vlastných čísel: $\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_p$
+5.  Projekcia dát: $\mathbf{PC} = \mathbf{Z} \mathbf{V}$
 
 # Dáta {#sec-data}
 
 ## Popis datasetu
 
-Použijeme vstavaný R dataset `mtcars` [@r2024], ktorý obsahuje informácie o 32 modeloch automobilov z roku 1974.
+Použijeme vstavaný R dataset `mtcars` [@r2024], ktorý obsahuje informácie o 32 modeloch automobilov z roku 1974. Prvých šesť riadkov datasetu zobrazuje @tbl-data.
 
 ```{r}
 #| label: tbl-data
@@ -126,21 +132,21 @@ Dataset obsahuje `r nrow(mtcars)` pozorovaní a `r ncol(mtcars)` premenných:
 
 | Premenná | Popis |
 |----------|-------|
-| `mpg` | Spotreba paliva (míle na galón) |
-| `cyl` | Počet valcov |
-| `disp` | Objem motora (cu.in.) |
-| `hp` | Výkon (konské sily) |
-| `drat` | Prevodový pomer zadnej nápravy |
-| `wt` | Hmotnosť (1000 lbs) |
-| `qsec` | Čas na 1/4 míle |
-| `vs` | Typ motora (V alebo priamy) |
-| `am` | Prevodovka (0 = automatická, 1 = manuálna) |
-| `gear` | Počet prevodových stupňov |
-| `carb` | Počet karburátorov |
+| `mpg`    | Spotreba paliva (míle na galón) |
+| `cyl`    | Počet valcov |
+| `disp`   | Objem motora (cu.in.) |
+| `hp`     | Výkon (konské sily) |
+| `drat`   | Prevodový pomer zadnej nápravy |
+| `wt`     | Hmotnosť (1000 lbs) |
+| `qsec`   | Čas na 1/4 míle |
+| `vs`     | Typ motora (V alebo priamy) |
+| `am`     | Prevodovka (0 = automatická, 1 = manuálna) |
+| `gear`   | Počet prevodových stupňov |
+| `carb`   | Počet karburátorov |
 
 ## Korelácie medzi premennými
 
-Pred PCA je užitočné preskúmať korelácie:
+Pred PCA je užitočné preskúmať korelácie — výsledná korelačná matica je znázornená na @fig-corr.
 
 ```{r}
 #| label: fig-corr
@@ -164,13 +170,13 @@ ggplot(cor_df, aes(Var1, Var2, fill = Correlation)) +
   labs(x = NULL, y = NULL, fill = "Korelácia")
 ```
 
-Z korelačnej matice vidíme silné korelácie medzi premennými (napr. `disp`, `cyl`, `hp`, `wt`), čo naznačuje, že PCA dokáže tieto premenné efektívne zlúčiť.
+Z korelačnej matice na @fig-corr vidíme silné korelácie medzi premennými (napr. `disp`, `cyl`, `hp`, `wt`), čo naznačuje, že PCA dokáže tieto premenné efektívne zlúčiť.
 
 # Výpočet PCA {#sec-vypocet}
 
 ## Ručný výpočet cez kovariančnú maticu
 
-Najskôr ukážeme PCA "od základov" — priamo cez spektrálny rozklad:
+Najskôr ukážeme PCA "od základov" — priamo cez spektrálny rozklad podľa postupu zo @sec-algoritmus:
 
 ```{r}
 #| label: manual-pca
@@ -209,20 +215,25 @@ summary(pca)
 
 ## Záťaže (Loadings)
 
+Záťaže prvých štyroch hlavných komponentov sú uvedené v @tbl-loadings.
+
 ```{r}
 #| label: tbl-loadings
 #| tbl-cap: "Záťaže prvých štyroch hlavných komponentov"
 
 loadings_df <- as.data.frame(pca$rotation[, 1:4])
+
 loadings_df |>
   kable(digits = 3) |>
   kable_styling(bootstrap_options = c("striped", "hover")) |>
-  column_spec(2, bold = TRUE, color = ifelse(abs(loadings_df$PC1) > 0.3, "darkred", "black"))
+  column_spec(2, bold = TRUE, color = ifelse(abs(loadings_df$PC1) > 0.3, "#8B0000", "#000000"))
 ```
 
 # Výsledky a vizualizácia {#sec-vysledky}
 
 ## Scree plot — vysvetlená variabilita
+
+Podiel variability vysvetlenej jednotlivými komponentmi (PVE, @eq-pve) znázorňuje scree plot na @fig-scree.
 
 ```{r}
 #| label: fig-scree
@@ -250,9 +261,11 @@ ggplot(scree_df[1:10, ], aes(x = reorder(PC, -PVE))) +
   theme_minimal(base_size = 12)
 ```
 
-Prvé dva komponenty vysvetľujú **`r round(cumulative_pve[2], 1)`%** celkovej variability, prvé tri komponenty **`r round(cumulative_pve[3], 1)`%**.
+Ako vidno na @fig-scree, prvé dva komponenty vysvetľujú **`r round(cumulative_pve[2], 1)`%** celkovej variability, prvé tri komponenty **`r round(cumulative_pve[3], 1)`%**.
 
 ## Biplót — projekcia do 2D priestoru
+
+Projekciu pozorovaní do roviny prvých dvoch komponentov spolu s vektormi záťaží zobrazuje @fig-biplot.
 
 ```{r}
 #| label: fig-biplot
@@ -281,6 +294,8 @@ autoplot(pca, data = mtcars_labeled,
 
 ## Interpretácia komponentov
 
+Záťaže premenných na prvých dvoch komponentoch (porovnaj s @tbl-loadings) sú vizualizované na @fig-loadings-plot.
+
 ```{r}
 #| label: fig-loadings-plot
 #| fig-cap: "Záťaže premenných na prvých dvoch komponentoch"
@@ -299,7 +314,7 @@ ggplot(loadings_long, aes(x = reorder(variable, abs(loading)), y = loading, fill
   theme_minimal(base_size = 12)
 ```
 
-**PC1** (vysvetľuje `r round(pve[1], 1)`% variability) je silne spojený s výkonom a veľkosťou motora (`hp`, `disp`, `cyl`, `wt`) — môžeme ho interpretovať ako **"silu vozidla"**. Premenné `mpg` a `drat` majú záporné záťaže, čo znamená, že silnejšie autá majú vyššiu spotrebu.
+**PC1** (vysvetľuje `r round(pve[1], 1)`% variability) je silne spojený s výkonom a veľkosťou motora (`hp`, `disp`, `cyl`, `wt`) — môžeme ho interpretovať ako **"silu vozidla"**. Premenné `mpg` a `drat` majú záporné záťaže (@fig-loadings-plot), čo znamená, že silnejšie autá majú vyššiu spotrebu.
 
 **PC2** (vysvetľuje `r round(pve[2], 1)`% variability) je primárne spojený s `qsec` a `vs` — súvisí s **typom a konfiguráciou motora**.
 
@@ -307,13 +322,13 @@ ggplot(loadings_long, aes(x = reorder(variable, abs(loading)), y = loading, fill
 
 V tejto správe sme aplikovali Analýzu hlavných komponentov na dataset `mtcars` s nasledujúcimi závermi:
 
-1. **Redukcia dimenzionality**: Z pôvodných 11 premenných stačia **2 komponenty** na vysvetlenie `r round(cumulative_pve[2], 1)`% variability, 3 komponenty pokrývajú `r round(cumulative_pve[3], 1)`%.
+1.  **Redukcia dimenzionality**: Z pôvodných 11 premenných stačia **2 komponenty** na vysvetlenie `r round(cumulative_pve[2], 1)`% variability, 3 komponenty pokrývajú `r round(cumulative_pve[3], 1)`% (pozri scree plot na @fig-scree).
 
-2. **Interpretácia**: PC1 reprezentuje "výkonnosť vozidla" (silne korelovaný s výkonom, objemom, hmotnosťou), PC2 reprezentuje "konfiguráciu motora".
+2.  **Interpretácia**: PC1 reprezentuje "výkonnosť vozidla" (silne korelovaný s výkonom, objemom, hmotnosťou), PC2 reprezentuje "konfiguráciu motora" (@fig-loadings-plot).
 
-3. **Vizualizácia**: Biplót jasne ukazuje separáciu manuálnych a automatických prevodoviek v priestore PC1–PC2, čo naznačuje, že typ prevodovky súvisí s celkovou výkonnosťou vozidla.
+3.  **Vizualizácia**: Biplót na @fig-biplot jasne ukazuje separáciu manuálnych a automatických prevodoviek v priestore PC1–PC2, čo naznačuje, že typ prevodovky súvisí s celkovou výkonnosťou vozidla.
 
-4. **Matematické základy**: PCA je elegantná aplikácia lineárnej algebry — spektrálny rozklad kovariančnej matice poskytuje optimálnu lineárnu projekciu v zmysle maximalizácie rozptylu [@jolliffe2016].
+4.  **Matematické základy**: PCA je elegantná aplikácia lineárnej algebry — spektrálny rozklad kovariančnej matice (@eq-eigen, @sec-teoria) poskytuje optimálnu lineárnu projekciu v zmysle maximalizácie rozptylu [@jolliffe2016].
 
 PCA zostáva jednou z najpoužívanejších metód exploratívnej analýzy dát vďaka svojej matematickej jednoduchosti a širokej aplikovateľnosti [@r2024].
 

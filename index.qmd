@@ -3,6 +3,7 @@ title: "Analýza hlavných komponentov (PCA)"
 subtitle: "Softvér na analýzu údajov — Projektová dokumentácia"
 author: "Artem Vara"
 date: "2026-05-10"
+lang: sk
 format:
   html:
     theme: cosmo
@@ -22,9 +23,10 @@ Tento projekt sa zaoberá metódou **Analýzy hlavných komponentov (PCA)** — 
 
 ### Technická správa
 
-Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matematickými vzťahmi, kód použitý vo výpočte, výsledky s komentárom a záver.
+Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matematickými vzťahmi, kód použitý vo výpočte, výsledky s komentárom a záver. Správa je dostupná v dvoch formátoch:
 
-[Otvoriť technickú správu](pca_projekt.html)
+- [Technická správa — HTML](pca_projekt.html)
+- [Technická správa — PDF](pca_projekt.pdf)
 
 ------------------------------------------------------------------------
 
@@ -46,14 +48,16 @@ Jednostránkový dashboard s interaktívnymi grafmi: scree plot, biplót, záťa
 
 ## Zdrojové súbory
 
-Všetky zdrojové súbory projektu (`.qmd`) sú súčasťou odovzdaného archívu.
+Všetky zdrojové súbory projektu (`.qmd`) sú dostupné priamo tu aj v GitHub repozitári:
 
-| Súbor                 | Popis                          |
-|-----------------------|--------------------------------|
-| `pca_projekt.qmd`     | Zdrojový kód technickej správy |
-| `pca_prezentacia.qmd` | Zdrojový kód prezentácie       |
-| `pca_dashboard.qmd`   | Zdrojový kód dashboardu        |
-| `references.bib`      | Bibliografické záznamy         |
+| Súbor | Popis | Stiahnuť | GitHub |
+|------------------------|------------------------------|--------------------------|--------------------------|
+| `pca_projekt.qmd` | Zdrojový kód technickej správy | [stiahnuť](pca_projekt.qmd) | [zobraziť](https://github.com/skorpiq/pca-projekt/blob/main/pca_projekt.qmd) |
+| `pca_prezentacia.qmd` | Zdrojový kód prezentácie | [stiahnuť](pca_prezentacia.qmd) | [zobraziť](https://github.com/skorpiq/pca-projekt/blob/main/pca_prezentacia.qmd) |
+| `pca_dashboard.qmd` | Zdrojový kód dashboardu | [stiahnuť](pca_dashboard.qmd) | [zobraziť](https://github.com/skorpiq/pca-projekt/blob/main/pca_dashboard.qmd) |
+| `references.bib` | Bibliografické záznamy | [stiahnuť](references.bib) | [zobraziť](https://github.com/skorpiq/pca-projekt/blob/main/references.bib) |
+
+Celý repozitár: <https://github.com/skorpiq/pca-projekt>
 
 ------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="sk" xml:lang="sk"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.8.25">
@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Artem Vara">
-<meta name="dcterms.date" content="2026-05-10">
 
 <title>Analýza hlavných komponentov (PCA)</title>
 <style>
@@ -2183,16 +2182,16 @@ vertical-align: -.125em;
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Autor</div>
     <div class="quarto-title-meta-contents">
              <p>Artem Vara </p>
           </div>
   </div>
     
     <div>
-    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-heading">Publikované</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 10, 2026</p>
+      <p class="date">10. mája 2026</p>
     </div>
   </div>
   
@@ -2210,8 +2209,11 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="dokumenty-projektu">Dokumenty projektu</h2>
 <section id="technická-správa" class="level3">
 <h3 class="anchored" data-anchor-id="technická-správa">Technická správa</h3>
-<p>Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matematickými vzťahmi, kód použitý vo výpočte, výsledky s komentárom a záver.</p>
-<p><a href="pca_projekt.html">Otvoriť technickú správu</a></p>
+<p>Kompletná správa obsahujúca motivačný úvod, teoretické pozadie s matematickými vzťahmi, kód použitý vo výpočte, výsledky s komentárom a záver. Správa je dostupná v dvoch formátoch:</p>
+<ul>
+<li><a href="pca_projekt.html">Technická správa — HTML</a></li>
+<li><a href="pca_projekt.pdf">Technická správa — PDF</a></li>
+</ul>
 <hr>
 </section>
 <section id="prezentácia" class="level3">
@@ -2229,33 +2231,44 @@ vertical-align: -.125em;
 </section>
 <section id="zdrojové-súbory" class="level2">
 <h2 class="anchored" data-anchor-id="zdrojové-súbory">Zdrojové súbory</h2>
-<p>Všetky zdrojové súbory projektu (<code>.qmd</code>) sú súčasťou odovzdaného archívu.</p>
+<p>Všetky zdrojové súbory projektu (<code>.qmd</code>) sú dostupné priamo tu aj v GitHub repozitári:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Súbor</th>
 <th>Popis</th>
+<th>Stiahnuť</th>
+<th>GitHub</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>pca_projekt.qmd</code></td>
 <td>Zdrojový kód technickej správy</td>
+<td><a href="pca_projekt.qmd">stiahnuť</a></td>
+<td><a href="https://github.com/skorpiq/pca-projekt/blob/main/pca_projekt.qmd">zobraziť</a></td>
 </tr>
 <tr class="even">
 <td><code>pca_prezentacia.qmd</code></td>
 <td>Zdrojový kód prezentácie</td>
+<td><a href="pca_prezentacia.qmd">stiahnuť</a></td>
+<td><a href="https://github.com/skorpiq/pca-projekt/blob/main/pca_prezentacia.qmd">zobraziť</a></td>
 </tr>
 <tr class="odd">
 <td><code>pca_dashboard.qmd</code></td>
 <td>Zdrojový kód dashboardu</td>
+<td><a href="pca_dashboard.qmd">stiahnuť</a></td>
+<td><a href="https://github.com/skorpiq/pca-projekt/blob/main/pca_dashboard.qmd">zobraziť</a></td>
 </tr>
 <tr class="even">
 <td><code>references.bib</code></td>
 <td>Bibliografické záznamy</td>
+<td><a href="references.bib">stiahnuť</a></td>
+<td><a href="https://github.com/skorpiq/pca-projekt/blob/main/references.bib">zobraziť</a></td>
 </tr>
 </tbody>
 </table>
+<p>Celý repozitár: <a href="https://github.com/skorpiq/pca-projekt" class="uri">https://github.com/skorpiq/pca-projekt</a></p>
 <hr>
 </section>
 <section id="použité-nástroje" class="level2">
@@ -2290,12 +2303,12 @@ vertical-align: -.125em;
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "Skopírované!");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "Skopírované!");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
