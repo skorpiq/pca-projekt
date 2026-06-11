@@ -14,10 +14,12 @@ $$\mathbf{C}\,\mathbf{v}_i = \lambda_i\,\mathbf{v}_i, \qquad \text{PVE}_k = \fra
 
 ```
 .
+├── index.qmd                # centrálna stránka projektu
 ├── pca_projekt.qmd          # technická správa (HTML + PDF)
+├── pca_projekt.pdf          # správa vo formáte PDF
 ├── pca_prezentacia.qmd      # prezentácia revealjs (10 slajdov)
 ├── pca_dashboard.qmd        # Quarto dashboard (interaktívny)
-└── references.bib           # bibliografia 
+└── references.bib           # bibliografia
 ```
 
 ---
