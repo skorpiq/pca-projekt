@@ -209,22 +209,22 @@ mtcars2 |>
   formatRound(c("mpg", "wt"), 1)
 ```
 
-# Detailná analýza {orientation="rows"}
+# Detailná analýza {orientation="columns"}
 
-## Row {height="20%"}
+## {.sidebar width="230px"}
+
+**Filtre** — platia pre oba grafy.
+
+Skúste aj výber lasom priamo v grafe.
 
 ```{r}
-#| title: "Filtre a výber (platia pre oba grafy — skúste aj výber lasom priamo v grafe)"
-bscols(
-  widths = c(6, 6),
-  filter_checkbox("f_trans", "Prevodovka", shared_scores, ~transmission, inline = TRUE),
-  filter_checkbox("f_cyl", "Počet valcov", shared_scores, ~cyl_f, inline = TRUE)
+htmltools::tagList(
+  filter_checkbox("f_trans", "Prevodovka", shared_scores, ~transmission),
+  filter_checkbox("f_cyl", "Počet valcov", shared_scores, ~cyl_f)
 )
 ```
 
-## Row {height="80%"}
-
-### Column {width="50%"}
+## Column {width="50%"}
 
 ```{r}
 #| title: "Rozptyl áut podľa PC1–PC2 a počtu valcov"
@@ -242,7 +242,7 @@ plot_ly(shared_scores, x = ~PC1, y = ~PC2,
   highlight(on = "plotly_selected", off = "plotly_deselect")
 ```
 
-### Column {width="50%"}
+## Column {width="50%"}
 
 ```{r}
 #| title: "Spotreba (mpg) vs. PC1 — lineárny vzťah (priamka z celých dát)"
