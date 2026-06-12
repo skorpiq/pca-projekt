@@ -95,6 +95,7 @@
     code span.va { color: #e36209; } /* Variable */
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
+<<<<<<< HEAD
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -116,12 +117,18 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
+=======
+  </style>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
   <link rel="stylesheet" href="pca_prezentacia_files/libs/revealjs/dist/theme/quarto-5af487cb6978c202429c3097b2e66a1e.css">
   <link href="pca_prezentacia_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="pca_prezentacia_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="pca_prezentacia_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+<<<<<<< HEAD
   <link href="pca_prezentacia_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
   <link href="pca_prezentacia_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
   <link href="pca_prezentacia_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -254,6 +261,7 @@ Artem Vara
 </div>
 </div>
 </div></div>
+<<<<<<< HEAD
 <aside class="notes">
 <p>Motivácia: párové grafy fungujú pre 3–5 premenných, pre 11 ich je 55 dvojíc. Zdôrazniť, že cieľom nie je zahodiť dáta, ale nájsť menej rozmerov, ktoré nesú väčšinu informácie.</p>
 <style type="text/css">
@@ -303,11 +311,14 @@ Artem Vara
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </section>
 <section id="matematické-základy" class="slide level2">
 <h2>Matematické základy</h2>
 <p><strong>Algoritmus PCA — 4 kroky:</strong></p>
 <ol type="1">
+<<<<<<< HEAD
 <li class="fragment"><strong>Štandardizácia</strong>: <span class="math inline">\(z_{ij} = \dfrac{x_{ij} - \bar{x}_j}{s_j}\)</span></li>
 <li class="fragment"><strong>Kovariančná matica</strong>: <span class="math inline">\(\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}\)</span></li>
 <li class="fragment"><strong>Spektrálny rozklad</strong>: <span class="math inline">\(\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i\)</span></li>
@@ -329,6 +340,15 @@ Artem Vara
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+=======
+<li class="fragment"><p><strong>Štandardizácia</strong>: <span class="math inline">\(z_{ij} = \dfrac{x_{ij} - \bar{x}_j}{s_j}\)</span></p></li>
+<li class="fragment"><p><strong>Kovariančná matica</strong>: <span class="math inline">\(\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}\)</span></p></li>
+<li class="fragment"><p><strong>Spektrálny rozklad</strong>: <span class="math inline">\(\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i\)</span></p></li>
+<li class="fragment"><p><strong>Projekcia</strong>: <span class="math inline">\(\mathbf{PC}_k = \mathbf{Z}\mathbf{v}_k\)</span></p></li>
+</ol>
+<div class="fragment">
+<p><strong>Vysvetlená variabilita</strong> <span class="math inline">\(k\)</span>-teho komponentu: <span class="math display">\[\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%\]</span></p>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </div>
 </section>
 <section id="dataset-mtcars" class="slide level2">
@@ -444,6 +464,7 @@ Artem Vara
 <div style="font-size: 0.85em; margin-top: 0.5em;">
 <p><strong>32</strong> modelov automobilov (1974) · <strong>11</strong> technických premenných · Zdroj: Henderson &amp; Velleman (1981)</p>
 </div>
+<<<<<<< HEAD
 <aside class="notes">
 <p>Klasický učebnicový dataset z časopisu Motor Trend. Premenné: spotreba, valce, objem, výkon, hmotnosť, zrýchlenie, typ motora a prevodovky. Malý, ale ideálny na demonštráciu metódy.</p>
 <style type="text/css">
@@ -457,22 +478,37 @@ Artem Vara
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </section>
 <section id="výpočet-pca-v-r" class="slide level2">
 <h2>Výpočet PCA v R</h2>
 <div class="cell columns column-output-location">
 <div class="column">
+<<<<<<< HEAD
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|1-3|5-6|8-13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mtcars,</span>
+=======
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mtcars,</span>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 <span id="cb1-2"><a href=""></a>              <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb1-3"><a href=""></a>              <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-4"><a href=""></a></span>
 <span id="cb1-5"><a href=""></a>lambda <span class="ot">&lt;-</span> pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<<<<<<< HEAD
 <span id="cb1-6"><a href=""></a>pve <span class="ot">&lt;-</span> lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda) <span class="sc">*</span> <span class="dv">100</span></span>
 <span id="cb1-7"><a href=""></a></span>
 <span id="cb1-8"><a href=""></a><span class="fu">data.frame</span>(</span>
 <span id="cb1-9"><a href=""></a>  <span class="at">PC =</span> <span class="fu">paste0</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
 <span id="cb1-10"><a href=""></a>  <span class="at">Eigenvalue =</span> <span class="fu">round</span>(lambda[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>),</span>
 <span id="cb1-11"><a href=""></a>  <span class="at">PVE =</span> <span class="fu">round</span>(pve[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>),</span>
+=======
+<span id="cb1-6"><a href=""></a>pve    <span class="ot">&lt;-</span> lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb1-7"><a href=""></a></span>
+<span id="cb1-8"><a href=""></a><span class="fu">data.frame</span>(</span>
+<span id="cb1-9"><a href=""></a>  <span class="at">PC         =</span> <span class="fu">paste0</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
+<span id="cb1-10"><a href=""></a>  <span class="at">Eigenvalue =</span> <span class="fu">round</span>(lambda[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>),</span>
+<span id="cb1-11"><a href=""></a>  <span class="at">PVE        =</span> <span class="fu">round</span>(pve[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>),</span>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 <span id="cb1-12"><a href=""></a>  <span class="at">Cumulative =</span> <span class="fu">round</span>(<span class="fu">cumsum</span>(pve)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>)</span>
 <span id="cb1-13"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
@@ -485,6 +521,7 @@ Artem Vara
 5 PC5       0.22  2.03      94.36</code></pre>
 </div>
 </div></div>
+<<<<<<< HEAD
 <aside class="notes">
 <p>Prechádzať kód po krokoch (šípka dopredu zvýrazňuje riadky): prcomp robí štandardizáciu aj rozklad naraz; sdev² = vlastné čísla; tabuľka ukazuje, že PC1 má vlastné číslo ~6.6, čo je 60 % variability.</p>
 <style type="text/css">
@@ -498,10 +535,13 @@ Artem Vara
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </section>
 <section id="scree-plot" class="slide level2">
 <h2>Scree Plot</h2>
 
+<<<<<<< HEAD
 <img data-src="pca_prezentacia_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"><aside class="notes">
 <p>Hľadáme „lakeť” — miesto, kde krivka prestáva prudko klesať. Tu je medzi PC2 a PC3. Pravidlo 80 % hovorí ponechať 4 komponenty; na vizualizáciu stačia 2.</p>
 <style type="text/css">
@@ -533,6 +573,13 @@ Artem Vara
           display:block!important;
       }</style></aside>
 </section>
+=======
+<img data-src="pca_prezentacia_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="biplót-projekcia-do-2d" class="slide level2">
+<h2>Biplót — projekcia do 2D</h2>
+
+<img data-src="pca_prezentacia_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 <section id="interpretácia-komponentov" class="slide level2">
 <h2>Interpretácia komponentov</h2>
 <div class="columns">
@@ -553,12 +600,17 @@ Artem Vara
 <div class="cell-output-display">
 <div>
 <figure>
+<<<<<<< HEAD
 <p><img data-src="pca_prezentacia_files/figure-revealjs/unnamed-chunk-8-1.png" width="576"></p>
+=======
+<p><img data-src="pca_prezentacia_files/figure-revealjs/unnamed-chunk-7-1.png" width="576"></p>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </figure>
 </div>
 </div>
 </div>
 </div></div>
+<<<<<<< HEAD
 <aside class="notes">
 <p>Interpretácia komponentov je vždy čiastočne subjektívna — pomenovania „sila” a „konfigurácia” sú naše označenia podľa toho, ktoré premenné majú najväčšie záťaže. Záporná záťaž mpg na PC1: vyššia hodnota PC1 = silnejšie auto = nižšie mpg.</p>
 <style type="text/css">
@@ -595,6 +647,8 @@ Artem Vara
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </section>
 <section id="záver" class="slide level2">
 <h2>Záver</h2>
@@ -632,6 +686,7 @@ Artem Vara
 </div></div>
 <div class="fragment">
 <blockquote>
+<<<<<<< HEAD
 <p><em>„PCA is arguably the most important tool in multivariate statistics.”</em> <span class="citation" data-cites="jolliffe2016">(<a href="#/literatúra" role="doc-biblioref" onclick="">Jolliffe and Cadima 2016</a>)</span></p>
 </blockquote>
 <aside class="notes">
@@ -657,6 +712,13 @@ Jolliffe, Ian T., and Jorge Cadima. 2016. <em>Principal Component Analysis</em>.
 </div>
 </div>
 
+=======
+<p><em>„PCA is arguably the most important tool in multivariate statistics.”</em><br>
+— Jolliffe &amp; Cadima (2016)</p>
+</blockquote>
+
+</div>
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
@@ -672,7 +734,10 @@ Jolliffe, Ian T., and Jorge Cadima. 2016. <em>Principal Component Analysis</em>.
   <script src="pca_prezentacia_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="pca_prezentacia_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="pca_prezentacia_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+<<<<<<< HEAD
   <script src="pca_prezentacia_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+=======
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
   <script src="pca_prezentacia_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -694,8 +759,12 @@ Jolliffe, Ian T., and Jorge Cadima. 2016. <em>Principal Component Analysis</em>.
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
+<<<<<<< HEAD
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":true},
+=======
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -866,7 +935,11 @@ Jolliffe, Ian T., and Jorge Cadima. 2016. <em>Principal Component Analysis</em>.
         },
 
         // reveal.js plugins
+<<<<<<< HEAD
         plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+=======
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+>>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 
           RevealMath,
           RevealNotes,
