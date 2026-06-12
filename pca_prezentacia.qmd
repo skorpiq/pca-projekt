@@ -14,12 +14,9 @@ format:
     height: 720
     margin: 0.04
     fontsize: 27px
-<<<<<<< HEAD
     chalkboard: true
     menu: true
 bibliography: references.bib
-=======
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 execute:
   echo: true
   warning: false
@@ -43,10 +40,6 @@ pve <- lambda / sum(lambda) * 100
 ## Problém vysokej dimenzionality
 
 :::: {.columns}
-<<<<<<< HEAD
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ::: {.column width="52%"}
 **Situácia:**
 
@@ -70,7 +63,6 @@ pairs(mtcars[, 1:5],
       cex.main = 0.9)
 ```
 :::
-<<<<<<< HEAD
 ::::
 
 ::: {.notes}
@@ -125,34 +117,20 @@ ggplot(df2, aes(wt, hp)) +
 Kľúčový slajd pre intuíciu pred matematikou. Ukázať rukou: keby sme všetky body premietli na červenú os PC1, stratíme len málo informácie — to je redukcia z 2D na 1D. PCA robí to isté v 11 rozmeroch.
 :::
 
-=======
-
-::::
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ## Matematické základy
 
 **Algoritmus PCA — 4 kroky:**
 
 ::: {.incremental}
 1. **Štandardizácia**: $z_{ij} = \dfrac{x_{ij} - \bar{x}_j}{s_j}$
-<<<<<<< HEAD
 2. **Kovariančná matica**: $\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
 3. **Spektrálny rozklad**: $\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i$
-=======
-
-2. **Kovariančná matica**: $\mathbf{C} = \dfrac{1}{n-1}\mathbf{Z}^\top\mathbf{Z}$
-
-3. **Spektrálny rozklad**: $\mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i$
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 4. **Projekcia**: $\mathbf{PC}_k = \mathbf{Z}\mathbf{v}_k$
 :::
 
 . . .
 
 **Vysvetlená variabilita** $k$-teho komponentu:
-<<<<<<< HEAD
 
 $$\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%$$
 
@@ -160,10 +138,6 @@ $$\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%$$
 Pri kroku 1 zdôrazniť, prečo štandardizujeme: hp je v stovkách, drat v jednotkách — bez štandardizácie by PCA ovládli premenné s veľkou škálou. Vlastné čísla = rozptyl pozdĺž príslušného vlastného vektora.
 :::
 
-=======
-$$\text{PVE}_k = \frac{\lambda_k}{\sum_{i=1}^{p} \lambda_i} \times 100\%$$
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ## Dataset mtcars
 
 ```{r}
@@ -177,74 +151,45 @@ kable(head(mtcars, 6), digits = 1) |>
 **32** modelov automobilov (1974) · **11** technických premenných · Zdroj: Henderson & Velleman (1981)
 :::
 
-<<<<<<< HEAD
 ::: {.notes}
 Klasický učebnicový dataset z časopisu Motor Trend. Premenné: spotreba, valce, objem, výkon, hmotnosť, zrýchlenie, typ motora a prevodovky. Malý, ale ideálny na demonštráciu metódy.
 :::
 
-=======
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ## Výpočet PCA v R
 
 ```{r}
 #| output-location: column
-<<<<<<< HEAD
 #| code-line-numbers: "|1-3|5-6|8-13"
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 pca <- prcomp(mtcars,
               center = TRUE,
               scale. = TRUE)
 
 lambda <- pca$sdev^2
-<<<<<<< HEAD
 pve <- lambda / sum(lambda) * 100
 
 data.frame(
   PC = paste0("PC", 1:5),
   Eigenvalue = round(lambda[1:5], 2),
   PVE = round(pve[1:5], 2),
-=======
-pve    <- lambda / sum(lambda) * 100
-
-data.frame(
-  PC         = paste0("PC", 1:5),
-  Eigenvalue = round(lambda[1:5], 2),
-  PVE        = round(pve[1:5], 2),
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
   Cumulative = round(cumsum(pve)[1:5], 2)
 )
 ```
 
-<<<<<<< HEAD
 ::: {.notes}
 Prechádzať kód po krokoch (šípka dopredu zvýrazňuje riadky): prcomp robí štandardizáciu aj rozklad naraz; sdev² = vlastné čísla; tabuľka ukazuje, že PC1 má vlastné číslo ~6.6, čo je 60 % variability.
 :::
 
-=======
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ## Scree Plot
 
 ```{r}
 #| echo: false
 #| fig-height: 4.5
 #| fig-width: 10
-<<<<<<< HEAD
 df <- data.frame(
   PC = factor(paste0("PC", 1:11), levels = paste0("PC", 1:11)),
   PVE = pve,
   Cumul = cumsum(pve)
 )
-=======
-
-df <- data.frame(
-  PC    = factor(paste0("PC", 1:11), levels = paste0("PC", 1:11)),
-  PVE   = pve,
-  Cumul = cumsum(pve)
-)
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ggplot(df, aes(x = PC)) +
   geom_col(aes(y = PVE), fill = "#2166ac", alpha = 0.8, width = 0.6) +
   geom_line(aes(y = Cumul, group = 1), color = "#d73027", linewidth = 1.4) +
@@ -257,23 +202,16 @@ ggplot(df, aes(x = PC)) +
   theme(plot.title = element_text(size = 12))
 ```
 
-<<<<<<< HEAD
 ::: {.notes}
 Hľadáme „lakeť" — miesto, kde krivka prestáva prudko klesať. Tu je medzi PC2 a PC3. Pravidlo 80 % hovorí ponechať 4 komponenty; na vizualizáciu stačia 2.
 :::
 
-=======
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ## Biplót — projekcia do 2D
 
 ```{r}
 #| echo: false
 #| fig-height: 4.5
 #| fig-width: 10
-<<<<<<< HEAD
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 mtcars2 <- mtcars |>
   mutate(transmission = factor(am, labels = c("Automatická", "Manuálna")))
 
@@ -291,7 +229,6 @@ autoplot(pca, data = mtcars2,
   theme(plot.title = element_text(size = 12))
 ```
 
-<<<<<<< HEAD
 ::: {.notes}
 Body = autá, šípky = pôvodné premenné. Šípky rovnakým smerom = korelované premenné (hp, cyl, disp). Manuálne autá vľavo (ľahšie, úspornejšie), automaty vpravo. Upozorniť: dĺžky šípok v biplóte sú škálované, smer je dôležitejší než dĺžka.
 :::
@@ -299,12 +236,6 @@ Body = autá, šípky = pôvodné premenné. Šípky rovnakým smerom = korelova
 ## Interpretácia komponentov
 
 :::: {.columns}
-=======
-## Interpretácia komponentov
-
-:::: {.columns}
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ::: {.column width="46%"}
 **PC1 — „Sila vozidla"** (`r round(pve[1],1)`%)
 
@@ -324,10 +255,6 @@ Body = autá, šípky = pôvodné premenné. Šípky rovnakým smerom = korelova
 #| echo: false
 #| fig-height: 4
 #| fig-width: 6
-<<<<<<< HEAD
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 as.data.frame(pca$rotation[,1:2]) |>
   mutate(var = rownames(pca$rotation)) |>
   pivot_longer(-var, names_to = "PC", values_to = "loading") |>
@@ -340,7 +267,6 @@ as.data.frame(pca$rotation[,1:2]) |>
   labs(x = NULL, y = "Záťaž")
 ```
 :::
-<<<<<<< HEAD
 ::::
 
 ::: {.notes}
@@ -368,28 +294,11 @@ Dôležitý slajd pre diskusiu: žiadna metóda nie je univerzálna. Na mtcars P
 **Výsledky:**
 
 |  |  |
-=======
-
-::::
-
-## Záver
-
-:::: {.columns}
-
-::: {.column width="48%"}
-**Výsledky:**
-
-| | |
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 |---|---|
 | Pôvodné premenné | 11 |
 | Komponenty (80%) | 4 |
 | PC1+PC2 variabilita | `r round(cumsum(pve)[2],1)`% |
 | Separácia áut | ✅ |
-<<<<<<< HEAD
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 :::
 
 ::: {.column width="52%"}
@@ -400,15 +309,10 @@ Dôležitý slajd pre diskusiu: žiadna metóda nie je univerzálna. Na mtcars P
 - Manuálne/auto. autá tvoria **odlišné zhluky**
 - Metóda vychádza z **lineárnej algebry**
 :::
-<<<<<<< HEAD
-=======
-
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
 ::::
 
 . . .
 
-<<<<<<< HEAD
 > *„PCA is arguably the most important tool in multivariate statistics."* [@jolliffe2016]
 
 ::: {.notes}
@@ -419,7 +323,3 @@ Zhrnúť hlavnú myšlienku jednou vetou: 11 čísel o každom aute sa dá nahra
 
 ::: {#refs}
 :::
-=======
-> *„PCA is arguably the most important tool in multivariate statistics."*  
-> — Jolliffe & Cadima (2016)
->>>>>>> d560a1f (Vylepšená prezentácia a dashboard)
